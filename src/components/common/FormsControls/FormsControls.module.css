@@ -1,0 +1,24 @@
+.formControl {
+}
+
+.formControl.error input,
+.formControl.error textarea {
+  border: 1px red solid;
+}
+
+.formControl span {
+  color: red;
+}
+
+.rememberMe {
+  display: flex;
+  flex-direction: row;
+}
+.rememberMe span {
+  margin-left: 5px;
+}
+
+.formSummaryError {
+  color: red;
+  font-size: 15px;
+}

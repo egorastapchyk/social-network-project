@@ -1,48 +1,66 @@
 import React from 'react';
 import classes from './MyPosts.module.css';
 import Post from './Post/Post';
+import { Field, reduxForm } from 'redux-form';
 
-const MyPosts = () => {
-  let postsData = [
-    {
-      id: 1,
-      imgUrl: 'https://html5css.ru/w3images/avatar2.png',
-      message: 'Hi, how are you?',
-      likesCount: '5 ❤️',
-    },
-    {
-      id: 2,
-      imgUrl: 'https://www.w3schools.com/w3images/avatar6.png',
-      message: 'It`s my first post!',
-      likesCount: '10 ❤️',
-    },
-  ];
+import {
+  required,
+  maxLengthCreator,
+} from '../../../utils/validators/validators';
+import { Textarea } from '../../common/FormsControls/FormsControls';
+
+const maxLength = maxLengthCreator(100);
+
+const MyPosts = React.memo((props) => {
+  let postsElement = [...props.postsData]
+    .reverse()
+    .map((posts, index) => (
+      <Post
+        key={
+          index
+        } /* the index parameter is needed to remove the error of unique keys */
+        avatar={posts.imgUrl}
+        message={posts.message}
+        likesCount={posts.likesCount}
+        id={posts.id}
+      />
+    ));
+
+  let newPostElement = React.createRef();
+
+  let onAddPost = (values) => {
+    props.addPost(values.newPostText);
+  };
 
   return (
     <div className={classes.postsBlock}>
       <h3>My posts</h3>
+      <AddNewPostFormRedux onSubmit={onAddPost} />
+      <div className={classes.posts}>{postsElement}</div>
+    </div>
+  );
+});
+
+const AddNewPostForm = (props) => {
+  return (
+    <form onSubmit={props.handleSubmit}>
       <div>
-        <textarea></textarea>
+        <Field
+          name="newPostText"
+          component={Textarea}
+          placeholder={'Enter your message'}
+          validate={[required, maxLength]}
+        />
       </div>
       <div>
         <button>ADD POST</button>
       </div>
-      <div className={classes.posts}>
-        <Post
-          avatar={postsData[0].imgUrl}
-          message={postsData[0].message}
-          likesCount={postsData[0].likesCount}
-          id={postsData[0].id}
-        />
-        <Post
-          avatar={postsData[1].imgUrl}
-          message={postsData[1].message}
-          likesCount={postsData[1].likesCount}
-          id={postsData[1].id}
-        />
-      </div>
-    </div>
+    </form>
   );
 };
+
+const AddNewPostFormRedux = reduxForm({
+  form: 'ProfileAddNewPostForm',
+})(AddNewPostForm);
 
 export default MyPosts;

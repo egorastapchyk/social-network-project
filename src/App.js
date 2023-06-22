@@ -1,34 +1,79 @@
-import React from 'react';
-// import logo from './logo.svg';
+import React, { Suspense, lazy, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import store from './redux/redux-store';
+import { Provider } from 'react-redux';
+
 import './App.css';
-import Header from './components/Header/Header';
+
+import HeaderContainer from './components/Header/HeaderContainer';
 import Navbar from './components/Navbar/Navbar';
-import Profile from './components/Profile/Profile';
-import Dialogs from './components/Dialogs/Dialogs';
 import News from './components/News/News';
 import Music from './components/Music/Music';
 import Settings from './components/Settings/Settings';
+import UsersContainer from './components/Users/UsersContainer';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { initializedApp } from './redux/app-reducer';
+
+import Login from './components/Login/Login';
+import Preloader from './components/common/Preloader/Preloader';
+import { withSuspense } from './hoc/withSuspense';
+
+const DialogsContainer = withSuspense(
+  lazy(() => import('./components/Dialogs/DialogsContainer'))
+);
+const ProfileContainer = withSuspense(
+  lazy(() => import('./components/Profile/ProfileContainer'))
+);
 
 const App = (props) => {
+  useEffect(() => {
+    props.initializedApp();
+  }, []);
+
+  if (!props.initialized) {
+    return <Preloader />;
+  }
+
   return (
     <BrowserRouter>
       <div className="app-wrapper">
-        <Header />
+        <HeaderContainer />
         <Navbar />
         <div className="app-wrapper-content">
-          <Routes>
-            <Route path="/dialogs/*" element={<Dialogs />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/music" element={<Music />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/dialogs/*" element={<DialogsContainer />} />
+              <Route path="/profile/" element={<ProfileContainer />} />
+              <Route path="/profile/:userId" element={<ProfileContainer />} />
+              <Route path="/users" element={<UsersContainer />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/music" element={<Music />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/login" element={<Login />} />
+            </Routes>
+          </Suspense>
         </div>
       </div>
     </BrowserRouter>
   );
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  initialized: state.app.initialized,
+});
+
+const AppContainer = compose(connect(mapStateToProps, { initializedApp }))(App);
+
+const MainApp = (props) => {
+  return (
+    <React.StrictMode>
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    </React.StrictMode>
+  );
+};
+
+export default MainApp;

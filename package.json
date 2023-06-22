@@ -2,16 +2,27 @@
   "name": "social-network-project",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://egorastapchyk.github.io/social-network-project",
   "dependencies": {
     "-": "^0.0.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.27.2",
+    "classnames": "^2.3.2",
+    "jest": "^29.5.0",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-redux": "^7.2.8",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-test-renderer": "17.0.2",
+    "redux": "^4.1.2",
+    "redux-form": "^8.3.8",
+    "redux-thunk": "^2.4.1",
+    "regenerator-runtime": "^0.13.11",
+    "reselect": "^4.1.7",
     "save": "^2.4.0",
     "web-vitals": "^2.1.4"
   },
@@ -19,7 +30,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d dist"
   },
   "eslintConfig": {
     "extends": [
@@ -38,5 +50,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.22.3",
+    "gh-pages": "^5.0.0",
+    "gh-pages-deploy": "^0.5.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   }
 }

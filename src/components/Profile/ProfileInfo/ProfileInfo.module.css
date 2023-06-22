@@ -1,3 +1,15 @@
 .descriptionBlock {
   padding: 10px;
 }
+.descriptionUser {
+  display: flex;
+  flex-direction: column;
+}
+
+.descriptionUser {
+  margin-top: 25px;
+}
+.checkMark {
+  width: 25px;
+  height: 25px;
+}
